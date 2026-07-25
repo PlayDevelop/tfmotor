@@ -510,26 +510,36 @@ h2 {
 .footer-signature {
   color: var(--white);
   font-family: Georgia, "Times New Roman", serif;
-  font-size: 1.05rem;
+  font-size: 0.9rem;
 }
 
 .footer-heart {
   display: inline-block;
   margin: 0 2px;
-  color: #c9d8bc;
+  color: #f3c0bc;
+  filter: drop-shadow(0 0 5px rgba(243, 192, 188, 0.35));
   transform-origin: center;
-  animation: heart-beat 2.8s ease-in-out infinite;
+  will-change: transform;
+  animation: heart-beat 1.8s ease-in-out infinite;
 }
 
 @keyframes heart-beat {
   0%,
-  16%,
+  38%,
   100% {
     transform: scale(1);
   }
 
-  8% {
-    transform: scale(1.22);
+  10% {
+    transform: scale(1.42);
+  }
+
+  20% {
+    transform: scale(1);
+  }
+
+  28% {
+    transform: scale(1.28);
   }
 }
 
