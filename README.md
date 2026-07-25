@@ -1,67 +1,81 @@
 # TF Motor
 
-Projektet innehåller tre webbplatser:
+This repository contains the TF Motor website and two separate family sites.
+Everything is built with plain HTML, CSS, JavaScript, and PHP so it can run
+directly on Simply.com.
 
-- `tfmotor.se`: filerna i projektroten.
-- `husbil.tfmotor.se`: familjens husbilsbokning i `husbil/`.
-- `mariaochjohan.tfmotor.se`: bröllopssida och bildgalleri i `mariaochjohan/`.
+## Websites
 
-## Kör lokalt
+- `tfmotor.se`: the main TF Motor website in the project root.
+- `husbil.tfmotor.se`: the family camper booking system in `husbil/`.
+- `mariaochjohan.tfmotor.se`: the wedding website and photo gallery in
+  `mariaochjohan/`.
 
-TF Motor-sidan kan förhandsgranskas statiskt:
+## Local development
+
+The TF Motor website can be previewed as a static site:
 
 ```bash
 python3 -m http.server 4173
 ```
 
-Öppna sedan `http://localhost:4173/`.
+Then open `http://localhost:4173/`.
 
-Husbilsbokningen behöver PHP eftersom login och bokningar går via `husbil/api.php`. Om PHP finns installerat lokalt kan hela projektet köras med:
+The camper booking system requires PHP because authentication and bookings are
+handled by `husbil/api.php`. If PHP is installed locally, run the complete
+project with:
 
 ```bash
 php -S localhost:4173 -t .
 ```
 
-Öppna då:
+Open:
 
 - TF Motor: `http://localhost:4173/`
-- Husbilsbokning: `http://localhost:4173/husbil/`
-- Bröllopssidan: `http://localhost:4173/mariaochjohan/`
+- Camper booking: `http://localhost:4173/husbil/`
+- Wedding website: `http://localhost:4173/mariaochjohan/`
 
-## Lokal konfiguration
+## Local configuration
 
-Produktionsuppgifter och driftdata ligger inte i Git.
+Production credentials and runtime data are not stored in Git.
 
 ```bash
 cp contact-config.example.php contact-config.php
 cp husbil/config.example.php husbil/config.php
 ```
 
-Fyll sedan i kontaktmottagare, databas och användarnas lösenordshashar lokalt.
-`contact-config.php`, `husbil/config.php`, bokningsdatabasen och uppladdade
-bröllopsbilder ignoreras av Git.
+Configure the contact recipients, database, and user password hashes locally.
+`contact-config.php`, `husbil/config.php`, the booking database, and uploaded
+wedding photos are ignored by Git.
 
-## Husbilsbokningen
+## Camper booking
 
-Inloggningar hanteras i `husbil/config.php`. Endast den ofarliga mallen
-`husbil/config.example.php` versionshanteras.
+User accounts are configured in `husbil/config.php`. Only the safe
+`husbil/config.example.php` template is version controlled.
 
-Sessionen sparas i webbläsaren tills man loggar ut. Bokningar sparas i en gemensam databas via `husbil/api.php`, så alla ser samma kalender.
+The browser session remains active until the user signs out. Bookings are stored
+in a shared database through `husbil/api.php`, ensuring that everyone sees the
+same calendar.
 
-Standardläget använder SQLite i `husbil/data/husbil.sqlite`. På Simply kan databasen fortsätta vara SQLite om PHP-miljön har skrivbehörighet där, eller bytas till MySQL genom att ändra DSN i `husbil/config.php`.
+The default setup uses SQLite at `husbil/data/husbil.sqlite`. On Simply.com, the
+application can continue using SQLite if PHP has write access to that directory,
+or it can use MySQL by changing the DSN in `husbil/config.php`.
 
-Martin är admin och kan ändra/ta bort alla bokningar. Övriga användare kan bara skapa, ändra och ta bort sina egna bokningar.
+Martin is the administrator and can edit or delete every booking. Other users
+can only create, edit, and delete their own bookings.
 
-## Publicering på Simply.com
+## Deployment on Simply.com
 
-Rotfilerna publiceras i `/public_html`.
+Deploy the root files to `/public_html`.
 
-Subdomänerna pekar på:
+The subdomains point to:
 
 - `husbil.tfmotor.se` → `/public_html/husbil`
 - `mariaochjohan.tfmotor.se` → `/public_html/mariaochjohan`
 
-Kontaktformuläret använder `contact.php`. Mottagare anges i den lokala
-`contact-config.php`, som inte versionshanteras.
+The contact form uses `contact.php`. Recipients are configured in the local
+`contact-config.php`, which is not version controlled.
 
-TF Motor-sidan visar adressen `Hallagärde Dammkärr 1, 516 95 Målsryd`, telefon `070-585 66 89` och sloganen `Lagar allt som brummar`.
+The TF Motor website displays the workshop address at Hallagärde Dammkärr 1,
+516 95 Målsryd, phone number 070-585 66 89, and the slogan
+“Lagar allt som brummar”.

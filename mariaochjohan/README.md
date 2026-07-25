@@ -1,29 +1,30 @@
 # Maria & Johan
 
-Bröllopssida med mobilanpassad bilduppladdning och galleri.
+A mobile-friendly wedding website where guests can upload photos and browse the
+shared gallery.
 
-## Lagring
+## Storage
 
-Bilder laddas direkt till webbhotellet:
+Photos are uploaded directly to the web server:
 
-- optimerade större bilder sparas i `uploads/`
-- små och snabba galleribilder sparas i `uploads/thumbs/`
-- bildlistan sparas i `data/photos.json`
+- Optimized full-size images are stored in `uploads/`.
+- Small and fast gallery thumbnails are stored in `uploads/thumbs/`.
+- Gallery metadata is stored in `data/photos.json`.
 
-De sex fasta bilderna i `assets/photos/` visas alltid först. Gästbilder visas
-därefter med den senast uppladdade först och 24 bilder åt gången.
+The six fixed photos in `assets/photos/` are always displayed first. Guest
+photos appear below them, newest first, with 24 photos shown per page.
 
-## Simply
+## Deployment on Simply.com
 
-Ladda upp innehållet i denna mapp till:
+Upload the contents of this directory to:
 
 ```text
 /public_html/mariaochjohan
 ```
 
-Mapparna `data`, `uploads` och `uploads/thumbs` måste vara skrivbara för PHP.
-Normal behörighet hos Simply är `755` för mappar. Använd `775` om uppladdning
-misslyckas på grund av skrivbehörighet.
+The `data`, `uploads`, and `uploads/thumbs` directories must be writable by PHP.
+The normal directory permission on Simply.com is `755`. Use `775` if uploads
+fail because of write permissions.
 
-Vid framtida uppdateringar ska befintliga `data/photos.json` och `uploads/`
-inte raderas, eftersom de innehåller gästernas bilder.
+Do not delete the existing `data/photos.json` or `uploads/` directory during
+future deployments, as they contain the guests’ uploaded photos.
