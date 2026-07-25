@@ -79,3 +79,62 @@ The contact form uses `contact.php`. Recipients are configured in the local
 The TF Motor website displays the workshop address at Hallagärde Dammkärr 1,
 516 95 Målsryd, phone number 070-585 66 89, and the slogan
 “Lagar allt som brummar”.
+
+## Releases and automatic deployment
+
+GitHub Actions validates every push and pull request. Production releases are
+created manually from **Actions → Release and deploy → Run workflow**.
+
+Select a `patch`, `minor`, or `major` increment. The workflow:
+
+1. validates all JavaScript and PHP files;
+2. calculates the next semantic version, starting at `v1.0.0`;
+3. deploys the selected commit to Simply.com over SSH;
+4. creates an annotated Git tag;
+5. creates a GitHub Release with generated release notes.
+
+The deployed site exposes `release.json`, containing the version, commit, and
+deployment timestamp.
+
+### Required GitHub secrets
+
+Configure these under **Settings → Secrets and variables → Actions**:
+
+| Secret | Description |
+| --- | --- |
+| `SIMPLY_SSH_HOST` | The Simply.com SSH/FTP hostname |
+| `SIMPLY_SSH_USER` | The web hosting username |
+| `SIMPLY_SSH_PRIVATE_KEY` | A dedicated private deployment key |
+| `SIMPLY_SSH_KNOWN_HOSTS` | The verified SSH host-key entry |
+
+Optional repository variables:
+
+| Variable | Default | Description |
+| --- | --- | --- |
+| `SIMPLY_SSH_PORT` | `22` | SSH port |
+| `SIMPLY_REMOTE_PATH` | `public_html` | Remote deployment directory |
+
+Create a dedicated key pair:
+
+```bash
+ssh-keygen -t ed25519 -C "github-actions-tfmotor" -f simply_deploy_key
+```
+
+Add `simply_deploy_key.pub` under **Website → SSH access** in the Simply.com
+control panel. Store the private `simply_deploy_key` file as the
+`SIMPLY_SSH_PRIVATE_KEY` GitHub secret.
+
+Create the known-hosts value after verifying the server fingerprint:
+
+```bash
+ssh-keyscan -p 22 YOUR_SIMPLY_HOST
+```
+
+Store the complete output as `SIMPLY_SSH_KNOWN_HOSTS`. Simply.com uses the same
+hostname and username for SSH as for FTP. See the
+[Simply.com SSH guide](https://www.simply.com/se/support/faq/php/349-anslut-med-ssh/)
+for the control-panel steps.
+
+The deployment excludes and preserves production-only files, including the
+contact configuration, camper database and user configuration, wedding gallery
+metadata, and all guest uploads.

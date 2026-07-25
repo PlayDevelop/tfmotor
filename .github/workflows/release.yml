@@ -1,0 +1,142 @@
+name: Release and deploy
+
+run-name: ${{ inputs.bump }} release to Simply.com by @${{ github.actor }}
+
+on:
+  workflow_dispatch:
+    inputs:
+      bump:
+        description: Version increment
+        required: true
+        default: patch
+        type: choice
+        options:
+          - patch
+          - minor
+          - major
+
+permissions:
+  contents: write
+
+concurrency:
+  group: simply-production
+  cancel-in-progress: false
+
+jobs:
+  release:
+    name: Validate, deploy, and release
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    environment:
+      name: production
+      url: https://tfmotor.se
+
+    env:
+      GH_TOKEN: ${{ github.token }}
+      SIMPLY_SSH_HOST: ${{ secrets.SIMPLY_SSH_HOST }}
+      SIMPLY_SSH_USER: ${{ secrets.SIMPLY_SSH_USER }}
+      SIMPLY_SSH_PORT: ${{ vars.SIMPLY_SSH_PORT || '22' }}
+      SIMPLY_REMOTE_PATH: ${{ vars.SIMPLY_REMOTE_PATH || 'public_html' }}
+
+    steps:
+      - name: Require main branch
+        if: github.ref != 'refs/heads/main'
+        run: |
+          echo "::error::Releases must be started from the main branch."
+          exit 1
+
+      - name: Check out repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Validate source files
+        run: bash .github/scripts/check-repository.sh
+
+      - name: Determine next version
+        id: version
+        run: |
+          release_tag="$(bash .github/scripts/next-version.sh '${{ inputs.bump }}')"
+          if git rev-parse "$release_tag" >/dev/null 2>&1; then
+            echo "::error::Tag $release_tag already exists."
+            exit 1
+          fi
+          echo "tag=$release_tag" >> "$GITHUB_OUTPUT"
+          echo "Next release: $release_tag"
+
+      - name: Create deployment metadata
+        env:
+          RELEASE_TAG: ${{ steps.version.outputs.tag }}
+        run: |
+          jq -n \
+            --arg version "$RELEASE_TAG" \
+            --arg commit "$GITHUB_SHA" \
+            --arg releasedAt "$(date -u +'%Y-%m-%dT%H:%M:%SZ')" \
+            '{version: $version, commit: $commit, releasedAt: $releasedAt}' \
+            > release.json
+
+      - name: Validate deployment secrets
+        env:
+          SSH_PRIVATE_KEY: ${{ secrets.SIMPLY_SSH_PRIVATE_KEY }}
+          SSH_KNOWN_HOSTS: ${{ secrets.SIMPLY_SSH_KNOWN_HOSTS }}
+        run: |
+          missing=0
+          for variable in SIMPLY_SSH_HOST SIMPLY_SSH_USER SSH_PRIVATE_KEY SSH_KNOWN_HOSTS; do
+            if [[ -z "${!variable:-}" ]]; then
+              echo "::error::$variable is not configured."
+              missing=1
+            fi
+          done
+          exit "$missing"
+
+      - name: Configure SSH
+        env:
+          SSH_PRIVATE_KEY: ${{ secrets.SIMPLY_SSH_PRIVATE_KEY }}
+          SSH_KNOWN_HOSTS: ${{ secrets.SIMPLY_SSH_KNOWN_HOSTS }}
+        run: |
+          install -d -m 700 "$HOME/.ssh"
+          printf '%s\n' "$SSH_PRIVATE_KEY" > "$HOME/.ssh/id_ed25519"
+          printf '%s\n' "$SSH_KNOWN_HOSTS" > "$HOME/.ssh/known_hosts"
+          chmod 600 "$HOME/.ssh/id_ed25519" "$HOME/.ssh/known_hosts"
+
+      - name: Verify SSH connection
+        run: |
+          ssh \
+            -p "$SIMPLY_SSH_PORT" \
+            -o BatchMode=yes \
+            "$SIMPLY_SSH_USER@$SIMPLY_SSH_HOST" \
+            'printf "Connected to Simply.com\n"'
+
+      - name: Deploy to Simply.com
+        run: bash .github/scripts/deploy-simply.sh
+
+      - name: Create Git tag
+        env:
+          RELEASE_TAG: ${{ steps.version.outputs.tag }}
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git tag --annotate "$RELEASE_TAG" "$GITHUB_SHA" --message "Release $RELEASE_TAG"
+          git push origin "$RELEASE_TAG"
+
+      - name: Create GitHub Release
+        env:
+          RELEASE_TAG: ${{ steps.version.outputs.tag }}
+        run: |
+          gh release create "$RELEASE_TAG" \
+            --verify-tag \
+            --target "$GITHUB_SHA" \
+            --title "TF Motor $RELEASE_TAG" \
+            --generate-notes
+
+      - name: Add workflow summary
+        env:
+          RELEASE_TAG: ${{ steps.version.outputs.tag }}
+        run: |
+          {
+            echo "## Deployed $RELEASE_TAG"
+            echo
+            echo "- Commit: \`$GITHUB_SHA\`"
+            echo "- Environment: [tfmotor.se](https://tfmotor.se)"
+            echo "- Release: https://github.com/$GITHUB_REPOSITORY/releases/tag/$RELEASE_TAG"
+          } >> "$GITHUB_STEP_SUMMARY"
