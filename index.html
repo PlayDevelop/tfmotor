@@ -1,0 +1,99 @@
+<!doctype html>
+<html lang="sv">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta
+      name="description"
+      content="TF Motor - Tommy lagar allt som brummar i Målsryd."
+    />
+    <meta name="theme-color" content="#111111" />
+    <title>TF Motor</title>
+    <link rel="icon" href="favicon.svg" type="image/svg+xml" />
+    <link rel="preload" as="image" href="tfmotor-assets/workshop.png" />
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <main>
+      <section class="hero">
+        <img src="tfmotor-assets/workshop.png" alt="Ren motorverkstad med verktyg och fordon" />
+        <div class="hero-shade"></div>
+        <div class="hero-content">
+          <img class="hero-logo" src="tfmotor-assets/tfmotor-logo.svg" alt="TF Motor" />
+          <p class="kicker">Lagar allt som brummar</p>
+          <h1>Tommy fixar det.</h1>
+          <p>
+            TF Motor i Målsryd hjälper dig med motorer, maskiner och fordon
+            som behöver komma igång igen. Rak kontakt, praktisk hjälp och
+            ordning i verkstaden.
+          </p>
+          <div class="hero-actions">
+            <a class="primary-button" href="#kontakt">Kontakta oss</a>
+          </div>
+        </div>
+      </section>
+
+      <section class="info-band" aria-label="Kontaktuppgifter">
+        <article>
+          <span>Adress</span>
+          <strong>Hallagärde Dammkärr 1<br />516 95 Målsryd</strong>
+        </article>
+        <article>
+          <span>Telefon</span>
+          <strong><a href="tel:+46705856689">070-585 66 89</a></strong>
+        </article>
+        <article>
+          <span>E-post</span>
+          <strong><a href="mailto:tommy@tfmotor.se">tommy@tfmotor.se</a></strong>
+        </article>
+      </section>
+
+      <section id="kontakt" class="contact-section">
+        <div class="contact-copy">
+          <p class="kicker">Kontakt</p>
+          <h2>Skicka ett<br />meddelande</h2>
+          <p>
+            Skriv några rader om vad som brummar, låter konstigt eller inte
+            startar, så återkommer Tommy.
+          </p>
+          <div class="mail-card">
+            <span>E-post</span>
+            <strong>tommy@tfmotor.se</strong>
+          </div>
+        </div>
+
+        <form id="contactForm" class="contact-form" action="contact.php" method="post">
+          <label>
+            <span>Namn</span>
+            <input name="name" type="text" autocomplete="name" required />
+          </label>
+          <label>
+            <span>E-post</span>
+            <input name="email" type="email" autocomplete="email" required />
+          </label>
+          <label>
+            <span>Telefon</span>
+            <input name="phone" type="tel" autocomplete="tel" />
+          </label>
+          <label>
+            <span>Meddelande</span>
+            <textarea name="message" rows="6" required></textarea>
+          </label>
+          <label class="honeypot">
+            <span>Lämna tomt</span>
+            <input name="website" type="text" tabindex="-1" autocomplete="off" />
+          </label>
+          <p id="formStatus" class="form-status" role="status" aria-live="polite"></p>
+          <button class="primary-button" type="submit">Skicka meddelande</button>
+        </form>
+      </section>
+    </main>
+
+    <footer class="footer">
+      <span>TF Motor</span>
+      <a id="camperLinkFooter" href="/husbil/">Boka husbil</a>
+    </footer>
+
+    <script src="app.js" defer></script>
+  </body>
+</html>

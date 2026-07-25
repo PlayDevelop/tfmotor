@@ -1,0 +1,95 @@
+<!doctype html>
+<html lang="sv">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="Maria och Johans bröllopsbilder." />
+    <meta name="theme-color" content="#9caf88" />
+    <title>Maria & Johan</title>
+    <link rel="icon" href="favicon.svg" type="image/svg+xml" />
+    <link rel="preload" as="image" href="assets/photos/hero.jpg" />
+    <link rel="stylesheet" href="styles.css?v=20260725-6" />
+  </head>
+  <body>
+    <main>
+      <section class="hero" aria-label="Maria och Johan">
+        <div class="hero-photo">
+          <img src="assets/photos/hero.jpg" alt="Maria och Johan vid havet" />
+        </div>
+        <div class="hero-content">
+          <p class="eyebrow">Bröllopsbilder</p>
+          <h1>Maria & Johan</h1>
+          <p class="lede">Dela ögonblicken från dagen och se bilderna som gästerna laddar upp.</p>
+          <div class="hero-actions">
+            <a class="primary-action" href="#ladda-upp">Ladda upp bilder</a>
+            <a class="secondary-action" href="#galleri">Se galleriet</a>
+          </div>
+        </div>
+      </section>
+
+      <section class="intro-strip" aria-label="Bilder på Maria och Johan">
+        <img src="assets/photos/moment-1.jpg" alt="Maria och Johan vid solnedgången" loading="lazy" decoding="async" />
+        <img src="assets/photos/moment-2.jpg" alt="Maria och Johan vid havet" loading="lazy" decoding="async" />
+        <img src="assets/photos/moment-4.jpg" alt="Maria och Johan tillsammans" loading="lazy" decoding="async" />
+      </section>
+
+      <section id="ladda-upp" class="upload-section">
+        <div class="section-copy">
+          <p class="eyebrow">Dela med er</p>
+          <h2>Ladda upp era bilder</h2>
+          <p>Bilderna hamnar i det gemensamma galleriet när uppladdningen är klar.</p>
+        </div>
+
+        <form id="uploadForm" class="upload-card">
+          <label class="guest-name">
+            <span>Ditt namn</span>
+            <input id="guestName" name="guestName" type="text" autocomplete="name" maxlength="60" placeholder="Valfritt" />
+          </label>
+
+          <label id="dropZone" class="drop-zone">
+            <input id="photoInput" name="photos[]" type="file" accept="image/*" multiple />
+            <span class="drop-icon" aria-hidden="true">+</span>
+            <strong>Välj bilder</strong>
+            <small>JPG, PNG, HEIC eller WebP</small>
+          </label>
+
+          <div id="selectedFiles" class="selected-files" aria-live="polite"></div>
+          <div id="uploadProgress" class="upload-progress" hidden>
+            <div class="progress-heading">
+              <span id="progressLabel">Förbereder bilder</span>
+              <strong id="progressPercent">0%</strong>
+            </div>
+            <progress id="progressBar" max="100" value="0" aria-labelledby="progressLabel"></progress>
+          </div>
+          <p id="uploadStatus" class="status-text" aria-live="polite"></p>
+          <button id="uploadButton" class="primary-action full" type="submit">Ladda upp</button>
+        </form>
+      </section>
+
+      <section id="galleri" class="gallery-section">
+        <div class="section-copy">
+          <p class="eyebrow">Galleri</p>
+          <h2>Alla bilder</h2>
+        </div>
+        <div id="gallery" class="gallery-grid" aria-live="polite"></div>
+        <div class="gallery-actions">
+          <button id="loadMoreButton" class="secondary-action load-more" type="button" hidden>Visa fler bilder</button>
+        </div>
+      </section>
+    </main>
+
+    <footer class="site-footer">
+      <p>© 2026 Maria & Johan</p>
+      <p class="footer-signature">Byggd med <span class="footer-heart" aria-label="kärlek">♥</span> av brorsan</p>
+    </footer>
+
+    <dialog id="lightbox" class="lightbox">
+      <button id="closeLightbox" class="close-button" type="button" aria-label="Stäng">×</button>
+      <img id="lightboxImage" alt="" />
+      <p id="lightboxCaption"></p>
+    </dialog>
+
+    <script src="drive-config.js"></script>
+    <script src="app.js?v=20260725-6" defer></script>
+  </body>
+</html>

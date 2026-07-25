@@ -1,0 +1,20 @@
+.DS_Store
+deploy/
+*.zip
+*.log
+.env
+
+# Production configuration and credentials
+contact-config.php
+husbil/config.php
+
+# Runtime data
+husbil/data/*
+!husbil/data/.htaccess
+mariaochjohan/data/*
+!mariaochjohan/data/.htaccess
+mariaochjohan/uploads/*
+!mariaochjohan/uploads/.htaccess
+!mariaochjohan/uploads/thumbs/
+mariaochjohan/uploads/thumbs/*
+!mariaochjohan/uploads/thumbs/.htaccess

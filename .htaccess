@@ -1,0 +1,15 @@
+Options -Indexes
+RewriteEngine On
+
+<FilesMatch "^(contact-config\.php)$">
+    Require all denied
+    Deny from all
+</FilesMatch>
+
+RewriteCond %{HTTP_HOST} ^husbil\.tfmotor\.se$ [NC]
+RewriteCond %{REQUEST_URI} !^/husbil(/|$) [NC]
+RewriteRule ^(.*)$ husbil/$1 [L]
+
+RewriteCond %{HTTP_HOST} ^mariaochjohan\.tfmotor\.se$ [NC]
+RewriteCond %{REQUEST_URI} !^/mariaochjohan(/|$) [NC]
+RewriteRule ^(.*)$ mariaochjohan/$1 [L]

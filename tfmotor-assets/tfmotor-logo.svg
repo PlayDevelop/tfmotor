@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 420 120" role="img" aria-labelledby="tfmotorTitle">
+  <title id="tfmotorTitle">TF Motor</title>
+  <path d="M35 13h91l-8 24H88L67 95H32l21-58H27z" fill="#d71920"/>
+  <path d="M116 13h91l-8 24h-53l-7 20h42l-8 23h-42l-5 15H91z" fill="#ffd200"/>
+  <g transform="skewX(-11)">
+    <text
+      x="198"
+      y="96"
+      fill="#ffffff"
+      font-family="Impact, Haettenschweiler, 'Arial Black', sans-serif"
+      font-size="50"
+      font-weight="900"
+      letter-spacing="-1.2"
+    >MOTOR</text>
+  </g>
+</svg>
